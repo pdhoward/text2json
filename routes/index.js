@@ -1,9 +1,5 @@
 
 
-
-// research on converting a text file into json ...
-// will need to use regex to parse
-
 // https://www.npmjs.com/package/plain-text-data-to-json
 
 // https://github.com/nicolashery/example-stream-parser
@@ -13,8 +9,28 @@
 
 'use strict';
 
-const fs = require('fs');
-const readline = require('readline');
+const fs =              require('fs');
+const readline =        require('readline');
+const MongoClient =     require('mongodb').MongoClient;
+ 
+// Connection URL
+const url = 'mongodb://localhost:27017';
+ 
+// Database Name
+const dbName = 'bookshop';
+let db = ''
+let collection = ''
+ 
+
+const insertDocuments = (db, obj) => {
+    return new Promise(async(resolve, reject) => {
+        
+        // Insert some documents
+        const result = await collection.insert(obj)
+        resolve(result)
+    })
+    
+  }
 
 let x = 0
 function convert(file) {
@@ -34,7 +50,7 @@ function convert(file) {
         let jsonstring = '{'
         let transform
         let item
-        reader.on('line', line => {            
+        reader.on('line', async(line) => {            
             //if (x>30) return
             let n = line.indexOf("ITEM")
             if (n==0) {                 
@@ -54,8 +70,8 @@ function convert(file) {
                     jsonstring = transform                    
                 } else {
 
-                    // limit creation to 1000 json objects
-                    if (x>1000) return
+                    // limit creation of json objects
+                    //if (x>100) return
                     
                     // read a blank line - we completed string object                    
                     // strip of blank which is last character
@@ -66,9 +82,14 @@ function convert(file) {
                     //console.log(jsonstring)
                     x++
                     console.log(`Pushing ${item} as number ${x}`) 
-                    array.push(JSON.parse(jsonstring))                
-                    jsonstring = "{"
-                    //resolve(array)
+
+                    //array.push(JSON.parse(jsonstring))   
+                    let obj = JSON.parse(jsonstring)
+                    await insertDocuments(db, obj).then((r) => {
+                        // continue
+                    })  
+                    jsonstring = "{"         
+                    
                 }
             }
            
@@ -82,9 +103,19 @@ function convert(file) {
     });
 }
 
+// Use connect method to connect to the server
+MongoClient.connect(url, function(err, client) {
+    if (err) console.log('Error connecting to Mongo')
+    db = client.db(dbName);
+    console.log("Connected successfully to server");
+    // Get the documents collection
+    collection = db.collection('auto')
 
-convert('txtdata/auto.txt')
+    convert('txtdata/auto.txt')
     .then(res => {
         console.log(res);
     })
     .catch(err => console.error(err));
+   
+  });
+
