@@ -51,7 +51,7 @@ function convert(file) {
         let transform
         let item
         reader.on('line', async(line) => {            
-            //if (x>30) return
+            if (x>30) return
             let n = line.indexOf("ITEM")
             if (n==0) {                 
                 item = line 
