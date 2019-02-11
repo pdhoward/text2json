@@ -1,0 +1,14 @@
+{
+  "name": "text2json",
+  "version": "0.7.0",
+  "main": "server.js",
+  "engines": {},
+  "scripts": {},
+  "dependencies": {
+    "readline": "^1.3.0",
+    "url": "^0.11.0"
+  },
+  "author": "Patrick Howard",
+  "license": "MIT",
+  "homepage": "http://www.xio.com"
+}
