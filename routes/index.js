@@ -37,7 +37,9 @@ function convert(file) {
         reader.on('line', line => {            
             //if (x>30) return
             let n = line.indexOf("ITEM")
-            if (n==0) item = line    
+            if (n==0) {                 
+                item = line 
+            }
             if (n !== 0) {
                 let y = line.indexOf("=")
                 
