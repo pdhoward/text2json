@@ -35,7 +35,7 @@ const insertDocuments = (obj) => {
             var s = fs.createReadStream('txtdata/auto.txt')
                 .pipe(es.split())
                 .pipe(es.mapSync( async function(line){
-                    if(lineNr > 25) return  
+                    //if(lineNr > 25) return  
                     // pause the readstream
                     s.pause();
             
@@ -82,7 +82,7 @@ const insertDocuments = (obj) => {
                             let obj = JSON.parse(jsonstring)
                             console.log(obj)
                             let post = await insertDocuments(obj)
-                            console.log(post)
+                            //console.log(post)
                             jsonstring = "{"    
                             
                             s.resume();
