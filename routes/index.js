@@ -1,16 +1,9 @@
 
-
-// https://www.npmjs.com/package/plain-text-data-to-json
-
-// https://github.com/nicolashery/example-stream-parser
-
-// checkout const qs = require('querystring');
-//https://nodejs.org/api/querystring.html
-
 'use strict';
 
 const fs =              require('fs');
 const readline =        require('readline');
+const es =              require('event-stream')
 const MongoClient =     require('mongodb').MongoClient;
  
 // Connection URL
@@ -31,8 +24,34 @@ const insertDocuments = (obj) => {
     })
     
   }
+  var lineNr = 0;
 
-  // http://2ality.com/2018/04/async-iter-nodejs.html
+  var s = fs.createReadStream('txtdata/auto.txt')
+      .pipe(es.split())
+      .pipe(es.mapSync(function(line){
+          if(lineNr > 10) return  
+          // pause the readstream
+          s.pause();
+  
+          lineNr += 1;
+
+  
+          // process line here and call s.resume() when rdy
+          // function below was for logging memory usage
+          console.log(line)
+          console.log(lineNr)          
+  
+          // resume the readstream, possibly from a callback
+          s.resume();
+      })
+      .on('error', function(err){
+          console.log('Error while reading file.', err);
+      })
+      .on('end', function(){
+          console.log('Read entire file.')
+      })
+  );
+  /*
 let x = 0
 function convert(file) {
 
@@ -119,4 +138,4 @@ MongoClient.connect(url, function(err, client) {
     .catch(err => console.error(err));
    
   });
-
+*/
