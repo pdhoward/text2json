@@ -25,37 +25,83 @@ const insertDocuments = (obj) => {
     
   }
   var lineNr = 0;
-
-  var s = fs.createReadStream('txtdata/auto.txt')
-      .pipe(es.split())
-      .pipe(es.mapSync(function(line){
-          if(lineNr > 10) return  
-          // pause the readstream
-          s.pause();
-  
-          lineNr += 1;
-
-  
-          // process line here and call s.resume() when rdy
-          // function below was for logging memory usage
-          console.log(line)
-          console.log(lineNr)          
-  
-          // resume the readstream, possibly from a callback
-          s.resume();
-      })
-      .on('error', function(err){
-          console.log('Error while reading file.', err);
-      })
-      .on('end', function(){
-          console.log('Read entire file.')
-      })
-  );
-  /*
-let x = 0
-function convert(file) {
+  function convert(file) {
 
     return new Promise((resolve, reject) => {
+            let x = 0
+            let jsonstring = '{'
+            let transform
+            let item
+            var s = fs.createReadStream('txtdata/auto.txt')
+                .pipe(es.split())
+                .pipe(es.mapSync( async function(line){
+                    if(lineNr > 25) return  
+                    // pause the readstream
+                    s.pause();
+            
+                    lineNr += 1;
+            
+                    let n = line.indexOf("ITEM")
+                    if (n==0) {                 
+                        item = line 
+
+                        s.resume();
+                    }
+
+                    if (n !== 0) {
+                        let y = line.indexOf("=")
+                        
+                        if (y !== -1) {
+                            // TRrnsform this line to key and value
+                            // first remove any illegal characters especially " (inch)
+                            line = line.replace(/[|&;$%@"<>()+,]/g, "");               
+                            let key = `"` + line.substring(0, y) + `"`
+                            let value = `"` + line.substring(y+1) + `"`
+                            transform = jsonstring
+                            transform = transform + key + ": " + value + ", "
+                            jsonstring = transform  
+                            
+                            s.resume();
+
+                        } else {        
+                            // limit creation of json objects
+                            //if (x>100) return
+                            
+                            // read a blank line - we completed string object                    
+                            // strip off blank which is last character                           
+                            jsonstring = jsonstring.substring(0, jsonstring.length-1)
+
+                            // replace comma with }
+                            jsonstring = jsonstring.replace(/.$/,"}")
+
+                            //console.log(jsonstring)
+                            x++
+                            console.log(`Pushing ${item} as number ${x}`) 
+        
+                            //array.push(JSON.parse(jsonstring))   
+                            let obj = JSON.parse(jsonstring)
+                            console.log(obj)
+                            let post = await insertDocuments(obj)
+                            console.log(post)
+                            jsonstring = "{"    
+                            
+                            s.resume();
+                            
+                        }
+                    }
+                    //s.resume();
+                })
+                .on('error', function(err){
+                    console.log('Error while reading file.', err);
+                })
+                .on('end', function(){
+                    console.log('Read entire file.')
+                })
+            );
+    })
+  
+let x = 0
+
 
         const stream = fs.createReadStream(file);
         // Handle stream error (IE: file not found)
@@ -66,52 +112,10 @@ function convert(file) {
         });
 
         const array = [];
-        let x = 0
-        let jsonstring = '{'
-        let transform
-        let item
+       
         reader.on('line', async(line) => {            
             if (x>10) return
-            let n = line.indexOf("ITEM")
-            if (n==0) {                 
-                item = line 
-            }
-            if (n !== 0) {
-                let y = line.indexOf("=")
-                
-                if (y !== -1) {
-                    // read a txt line - format for key value
-                     // first remove any illegal characters especially " (inch)
-                    line = line.replace(/[|&;$%@"<>()+,]/g, "");               
-                    let key = `"` + line.substring(0, y) + `"`
-                    let property = `"` + line.substring(y+1) + `"`
-                    transform = jsonstring
-                    transform = transform + key + ": " + property + ", "
-                    jsonstring = transform                    
-                } else {
-
-                    // limit creation of json objects
-                    //if (x>100) return
-                    
-                    // read a blank line - we completed string object                    
-                    // strip of blank which is last character
-                   
-                    jsonstring = jsonstring.substring(0, jsonstring.length-1)
-                    // replace comma with }
-                    jsonstring = jsonstring.replace(/.$/,"}")           
-                    //console.log(jsonstring)
-                    x++
-                    console.log(`Pushing ${item} as number ${x}`) 
-
-                    //array.push(JSON.parse(jsonstring))   
-                    let obj = JSON.parse(jsonstring)
-                    console.log(obj)
-                    let post = await insertDocuments(obj)
-                    console.log(post)
-                    jsonstring = "{"         
-                    
-                }
-            }
+            
            
         });
 
