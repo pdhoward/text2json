@@ -22,16 +22,17 @@ let db = ''
 let collection = ''
  
 
-const insertDocuments = (db, obj) => {
+const insertDocuments = (obj) => {
     return new Promise(async(resolve, reject) => {
         
         // Insert some documents
-        const result = await collection.insert(obj)
+        const result = await collection.insertOne(obj)
         resolve(result)
     })
     
   }
 
+  // http://2ality.com/2018/04/async-iter-nodejs.html
 let x = 0
 function convert(file) {
 
@@ -51,7 +52,7 @@ function convert(file) {
         let transform
         let item
         reader.on('line', async(line) => {            
-            if (x>30) return
+            if (x>10) return
             let n = line.indexOf("ITEM")
             if (n==0) {                 
                 item = line 
@@ -85,9 +86,9 @@ function convert(file) {
 
                     //array.push(JSON.parse(jsonstring))   
                     let obj = JSON.parse(jsonstring)
-                    await insertDocuments(db, obj).then((r) => {
-                        // continue
-                    })  
+                    console.log(obj)
+                    let post = await insertDocuments(obj)
+                    console.log(post)
                     jsonstring = "{"         
                     
                 }
