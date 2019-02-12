@@ -96,36 +96,12 @@ const insertDocuments = (obj) => {
                 })
                 .on('end', function(){
                     console.log('Read entire file.')
+                    resolve({msg: 'Completed conversion of file'})
                 })
             );
     })
-  
-let x = 0
-
-
-        const stream = fs.createReadStream(file);
-        // Handle stream error (IE: file not found)
-        stream.on('error', reject);
-
-        const reader = readline.createInterface({
-            input: stream
-        });
-
-        const array = [];
-       
-        reader.on('line', async(line) => {            
-            if (x>10) return
-            
-           
-        });
-
-        reader.on('close', () => {
-            console.log(`made it here`)
-           // console.log(jsonstring)
-            
-            resolve(array) })
-    });
 }
+ 
 
 // Use connect method to connect to the server
 MongoClient.connect(url, function(err, client) {
@@ -142,4 +118,4 @@ MongoClient.connect(url, function(err, client) {
     .catch(err => console.error(err));
    
   });
-*/
+
