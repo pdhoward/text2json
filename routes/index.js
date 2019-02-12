@@ -78,9 +78,10 @@ const insertDocuments = (obj) => {
                             x++
                             console.log(`Pushing ${item} as number ${x}`) 
         
-                            //array.push(JSON.parse(jsonstring))   
+                            //array.push(JSON.parse(jsonstring))
+                            
                             let obj = JSON.parse(jsonstring)
-                            console.log(obj)
+                            //console.log(obj)
                             let post = await insertDocuments(obj)
                             //console.log(post)
                             jsonstring = "{"    
