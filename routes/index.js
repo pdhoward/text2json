@@ -52,11 +52,21 @@ const insertDocuments = (obj) => {
                         let y = line.indexOf("=")
                         
                         if (y !== -1) {
-                            // TRrnsform this line to key and value
+                            // Transform this line to key and value
                             // first remove any illegal characters especially " (inch)
                             line = line.replace(/[|&;$%@"<>()+,]/g, "");               
                             let key = `"` + line.substring(0, y) + `"`
                             let value = `"` + line.substring(y+1) + `"`
+
+                            if (key == '"ListPrice"') {
+                                let i = value.indexOf('USD')
+                                if (i !== -1) {
+                                    let t = i+3
+                                    let newValue = `"` + value.substring(t)
+                                    value = newValue
+                                }
+                            }
+                            
                             transform = jsonstring
                             transform = transform + key + ": " + value + ", "
                             jsonstring = transform  
