@@ -58,6 +58,7 @@ const insertDocuments = (obj) => {
                             let key = `"` + line.substring(0, y) + `"`
                             let value = `"` + line.substring(y+1) + `"`
 
+                            // strip out and reformat the listprice
                             if (key == '"ListPrice"') {
                                 let i = value.indexOf('USD')
                                 if (i !== -1) {
@@ -66,7 +67,7 @@ const insertDocuments = (obj) => {
                                     value = newValue
                                 }
                             }
-                            
+
                             transform = jsonstring
                             transform = transform + key + ": " + value + ", "
                             jsonstring = transform  
