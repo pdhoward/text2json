@@ -63,16 +63,21 @@ const insertDocuments = (obj) => {
                             
                             s.resume();
 
-                        } else {        
-                            // limit creation of json objects
-                            //if (x>100) return
+                        } else {     
+                            // attach special identifiers and complete Obj
+                            let t = item.length
+                            let key = `"_REF"`
+                            let value = `"` + item.substring(0) + `"`
+                            transform = jsonstring
+                            transform = transform + key + ": " + value + "}"
+                            jsonstring = transform  
                             
                             // read a blank line - we completed string object                    
                             // strip off blank which is last character                           
-                            jsonstring = jsonstring.substring(0, jsonstring.length-1)
+                            //jsonstring = jsonstring.substring(0, jsonstring.length-1)
 
                             // replace comma with }
-                            jsonstring = jsonstring.replace(/.$/,"}")
+                           // jsonstring = jsonstring.replace(/.$/,"}")
 
                             //console.log(jsonstring)
                             x++
