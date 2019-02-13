@@ -77,12 +77,16 @@ const insertDocuments = (obj) => {
                             //console.log(jsonstring)
                             x++
                             console.log(`Pushing ${item} as number ${x}`) 
+                            if (item == "ITEM 2108") console.log(jsonstring)
         
                             //array.push(JSON.parse(jsonstring))
-                            if ((typeof jsonstring) === 'object') {
+                            /*
+                            if (typeof jsonstring === 'object' && jsonstring !== null) {
                                 console.log(`error .... object`)
                                 console.log(jsonstring)
+                                return
                             }
+                            */
                             
                             let obj = JSON.parse(jsonstring)
                             //console.log(obj)
