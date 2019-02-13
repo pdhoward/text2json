@@ -82,7 +82,9 @@ const insertDocuments = (obj) => {
                                 let obj = JSON.parse(jsonstring)
                                 //console.log(obj)
                                 let post = await insertDocuments(obj)
-                                //console.log(post)                                
+                                //console.log(post)
+                                jsonstring = "{"
+                                s.resume();                            
                             } catch(error) {
                                 jsonstring = "{"
                                 s.resume();
