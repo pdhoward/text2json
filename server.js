@@ -1,5 +1,6 @@
-//   super simple server
-//   serving up or converting files
+////////////////////////////////////////////
+//   File Conversions - Create Mock Data //
+//////////////////////////////////////////
 //   without using express
 
 const path = 						require('path')
