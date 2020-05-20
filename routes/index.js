@@ -1,6 +1,4 @@
-
 'use strict';
-
 const fs =              require('fs');
 const readline =        require('readline');
 const es =              require('event-stream')
